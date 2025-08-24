@@ -7,8 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migration:generate": "drizzle-kit generate",
-    "migration:migrate": "drizzle-kit migrate"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:drop": "drizzle-kit drop",
+    "db:studio": "drizzle-kit studio",
+    "db:reset": "tsx db/reset.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -76,6 +80,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "tailwindcss": "^4",
+    "tsx": "^4.20.5",
     "tw-animate-css": "^1.3.6",
     "typescript": "^5"
   }

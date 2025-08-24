@@ -102,3 +102,10 @@ export const getUsers = async (organizationId: string) => {
     return [];
   }
 };
+
+export const signOut = async () => {
+  await auth.api.signOut({
+    // This endpoint requires session cookies.
+    headers: await headers(),
+  });
+};
