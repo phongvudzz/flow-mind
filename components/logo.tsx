@@ -1,34 +1,19 @@
-import { cn } from "@/lib/utils";
-import { SquareDashedMousePointer } from "lucide-react";
-import Link from "next/link";
-import React from "react";
-
-function Logo({
-  fontSize = "2xl",
-  iconSize = 20,
-}: {
-  fontSize?: string;
-  iconSize?: number;
-}) {
+export const Logo = () => {
   return (
-    <Link
-      href="/"
-      className={cn(
-        "text-2xl font-extrabold flex items-center gap-2",
-        fontSize
-      )}
+    <svg
+      width="60"
+      height="45"
+      viewBox="0 0 60 45"
+      fill="none"
+      className="w-5 h-5"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <div className="rounded-xl bg-gradient-to-t from-rose-500  to-rose-600 p-2">
-        <SquareDashedMousePointer size={iconSize} className="stroke-white" />
-      </div>
-      <div>
-        <span className="bg-gradient-to-t from-rose-500  to-rose-600 bg-clip-text text-transparent">
-          Flow
-        </span>
-        <span className="text-stone-700 dark:text-stone-300">mind</span>
-      </div>
-    </Link>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M0 0H15V15H30V30H15V45H0V30V15V0ZM45 30V15H30V0H45H60V15V30V45H45H30V30H45Z"
+        className="fill-black dark:fill-white"
+      />
+    </svg>
   );
-}
-
-export default Logo;
+};

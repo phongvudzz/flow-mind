@@ -1,126 +1,51 @@
-import { SigninForm } from "@/components/sign-in-form";
+"use client";
 
-export default function Signin() {
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [showMagicLink, setShowMagicLink] = useState(false);
-  // const router = useRouter();
+import { SignIn } from "@/components/sign-in";
+import { SignUp } from "@/components/sign-up";
+import { Tabs } from "@/components/ui/tabs2";
+import { authClient } from "@/lib/auth-client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { getCallbackURL } from "@/lib/shared";
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setError("");
+export default function Page() {
+  const router = useRouter();
+  const params = useSearchParams();
+  useEffect(() => {
+    authClient.oneTap({
+      fetchOptions: {
+        onError: ({ error }) => {
+          toast.error(error.message || "An error occurred");
+        },
+        onSuccess: () => {
+          toast.success("Successfully signed in");
+          router.push(getCallbackURL(params));
+        },
+      },
+    });
+  }, []);
 
-  //   try {
-  //     if (showMagicLink) {
-  //       await handleMagicLinkSignIn(email);
-  //     } else {
-  //       await handleEmailSignIn(email, password);
-  //     }
-  //   } catch {
-  //     setError("An unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleEmailSignIn = async (email: string, password: string) => {
-  //   const { error } = await authClient.signIn.email(
-  //     {
-  //       email,
-  //       password,
-  //       callbackURL: "/dashboard",
-  //       rememberMe: true,
-  //     },
-  //     {
-  //       onRequest: () => setLoading(true),
-  //       onSuccess: () => setError("Check your email for verification!"),
-  //       onError: (ctx) => setError(ctx.error.message || "Sign in failed"),
-  //     }
-  //   );
-
-  //   if (error) {
-  //     setError(error.message || "Sign in failed");
-  //   }
-  // };
-
-  // const handleMagicLinkSignIn = async (email: string) => {
-  //   const { error } = await authClient.signIn.magicLink(
-  //     {
-  //       email,
-  //       callbackURL: "/dashboard",
-  //     },
-  //     {
-  //       onRequest: () => setLoading(true),
-  //       onSuccess: () => {
-  //         // Show success message to user
-  //         setError("Check your email for the magic link!");
-  //       },
-  //       onError: (ctx) =>
-  //         setError(ctx.error.message || "Magic link sign in failed"),
-  //     }
-  //   );
-
-  //   if (error) {
-  //     setError(error.message || "Magic link sign in failed");
-  //   }
-  // };
-
-  // const handleGithubSignIn = async () => {
-  //   setLoading(true);
-  //   setError("");
-
-  //   try {
-  //     const { error } = await authClient.signIn.social(
-  //       {
-  //         provider: "github",
-  //         callbackURL: "/dashboard",
-  //       },
-  //       {
-  //         onRequest: () => setLoading(true),
-  //         onSuccess: () => router.push("/dashboard"),
-  //         onError: (ctx) => setError(ctx.error.message || "Sign in failed"),
-  //       }
-  //     );
-
-  //     if (error) {
-  //       setError(error.message || "Sign in failed");
-  //     }
-  //   } catch {
-  //     setError("An unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleGoogleSignIn = async () => {
-  //   setLoading(true);
-  //   setError("");
-
-  //   try {
-  //     const { error } = await authClient.signIn.social(
-  //       {
-  //         provider: "google",
-  //         callbackURL: "/dashboard",
-  //       },
-  //       {
-  //         onRequest: () => setLoading(true),
-  //         onSuccess: () => router.push("/dashboard"),
-  //         onError: (ctx) => setError(ctx.error.message || "Sign in failed"),
-  //       }
-  //     );
-
-  //     if (error) {
-  //       setError(error.message || "Sign in failed");
-  //     }
-  //   } catch {
-  //     setError("An unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  return <SigninForm />;
+  return (
+    <div className="w-full">
+      <div className="flex items-center flex-col justify-center w-full md:py-10">
+        <div className="md:w-[400px]">
+          <Tabs
+            tabs={[
+              {
+                title: "Sign In",
+                value: "sign-in",
+                content: <SignIn />,
+              },
+              {
+                title: "Sign Up",
+                value: "sign-up",
+                content: <SignUp />,
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

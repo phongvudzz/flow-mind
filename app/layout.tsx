@@ -43,6 +43,7 @@ export default function RootLayout({
           }}
         />
         <meta name="theme-color" content={META_THEME_COLORS.light} />
+        <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
       </head>
       <body
         className={cn(

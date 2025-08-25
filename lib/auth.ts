@@ -15,10 +15,10 @@ import { getActiveOrganization } from "@/server/organizations";
 import { Resend } from "resend";
 import OrganizationInvitationEmail from "@/components/emails/organization-invitation";
 import ForgotPasswordEmail from "@/components/emails/reset-password";
-import VerifyEmail from "@/components/emails/verify-email";
+// import VerifyEmail from "@/components/emails/verify-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY as string);
-const from = process.env.BETTER_AUTH_EMAIL || "delivered@resend.dev";
+const from = process.env.BETTER_AUTH_EMAIL || "phongvulearning@gmail.com";
 const to = process.env.TEST_EMAIL || "";
 
 export const auth = betterAuth({
