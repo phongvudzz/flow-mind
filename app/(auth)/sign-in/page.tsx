@@ -1,7 +1,7 @@
 "use client";
 
-import { SignIn } from "@/components/sign-in";
-import { SignUp } from "@/components/sign-up";
+import { SignIn } from "@/components/forms/sign-in";
+import { SignUp } from "@/components/forms/sign-up";
 import { Tabs } from "@/components/ui/tabs2";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";

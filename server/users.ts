@@ -3,6 +3,7 @@
 import { db } from "@/db/drizzle";
 import { member, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { convertImageToBase64 } from "@/lib/utils";
 import { eq, inArray, not } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -56,7 +57,8 @@ export const signIn = async (email: string, password: string) => {
 export const signUp = async (
   email: string,
   password: string,
-  username: string
+  username: string,
+  profileImage: File | null
 ) => {
   try {
     await auth.api.signUpEmail({
@@ -64,6 +66,7 @@ export const signUp = async (
         email,
         password,
         name: username,
+        image: profileImage ? await convertImageToBase64(profileImage) : "",
       },
     });
 

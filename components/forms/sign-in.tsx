@@ -56,7 +56,10 @@ export function SignIn() {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
+              <Link
+                href="/forget-password"
+                className="ml-auto inline-block text-sm underline"
+              >
                 Forgot your password?
               </Link>
             </div>
@@ -166,7 +169,7 @@ export function SignIn() {
               </svg>
               Sign in with GitHub
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               className={cn("w-full gap-2")}
               onClick={async () => {
@@ -188,24 +191,15 @@ export function SignIn() {
                 ></path>
               </svg>
               Sign in with Microsoft
-            </Button>
+            </Button> */}
           </div>
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-center w-full border-t pt-4">
-          <p className="text-center text-xs text-neutral-500">
-            built with{" "}
-            <Link
-              href="https://better-auth.com"
-              className="underline"
-              target="_blank"
-            >
-              <span className="dark:text-white/70 cursor-pointer">
-                better-auth.
-              </span>
-            </Link>
-          </p>
+        <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+          By clicking continue, you agree to our{" "}
+          <Link href="#">Terms of Service</Link> and{" "}
+          <Link href="#">Privacy Policy</Link>.
         </div>
       </CardFooter>
     </Card>
