@@ -4,6 +4,7 @@ import { db } from "@/db/drizzle";
 import { member, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { convertImageToBase64 } from "@/lib/utils";
+import { SocialProvider } from "@/types/social";
 import { eq, inArray, not } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -54,12 +55,17 @@ export const signIn = async (email: string, password: string) => {
   }
 };
 
-export const signUp = async (
-  email: string,
-  password: string,
-  username: string,
-  profileImage: File | null
-) => {
+export const signUp = async ({
+  email,
+  password,
+  username,
+  profileImage,
+}: {
+  email: string;
+  password: string;
+  username: string;
+  profileImage: File | undefined;
+}) => {
   try {
     await auth.api.signUpEmail({
       body: {
@@ -67,6 +73,7 @@ export const signUp = async (
         password,
         name: username,
         image: profileImage ? await convertImageToBase64(profileImage) : "",
+        callbackURL: "/dashboard",
       },
     });
 
@@ -111,4 +118,30 @@ export const signOut = async () => {
     // This endpoint requires session cookies.
     headers: await headers(),
   });
+};
+
+export const signInSocialSever = async (
+  provider: SocialProvider,
+  callbackURL?: string
+) => {
+  try {
+    await auth.api.signInSocial({
+      body: {
+        provider,
+        callbackURL,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Signed in successfully.",
+    };
+  } catch (error) {
+    const e = error as Error;
+
+    return {
+      success: false,
+      message: e.message || "An unknown error occurred.",
+    };
+  }
 };

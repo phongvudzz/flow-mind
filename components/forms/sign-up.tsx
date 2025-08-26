@@ -13,15 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import Image from "next/image";
 import { Loader2, X } from "lucide-react";
-import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { getCallbackURL } from "@/lib/shared";
 import z from "zod";
 
 import {
@@ -32,10 +28,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { getImageData } from "@/lib/utils";
+import { convertImageToBase64, getImageData } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { signUp } from "@/lib/auth-client";
+import { getCallbackURL } from "@/lib/shared";
 
-const signupSchema = z
+const signUpSchema = z
   .object({
     firstName: z.string().min(2).max(255),
     lastName: z.string().min(2).max(255),
@@ -44,7 +42,7 @@ const signupSchema = z
     confirmPassword: z.string().min(8),
     profileImage: z
       .instanceof(File, { message: "Expected a file." })
-      .optional()
+
       .refine(
         (file) => file && file.size < 5 * 1024 * 1024,
         "Max file size is 5MB."
@@ -52,7 +50,8 @@ const signupSchema = z
       .refine(
         (file) => file && ["image/jpeg", "image/png"].includes(file.type),
         "Only JPG/PNG allowed."
-      ),
+      )
+      .optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -61,12 +60,12 @@ const signupSchema = z
 
 export function SignUp() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -77,50 +76,34 @@ export function SignUp() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signupSchema>) {
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
     setIsLoading(true);
 
-    console.log("values", values);
+    const { email, password, firstName, lastName, profileImage } = values;
 
-    // const { success, message } = await signUp(
-    //   values.email,
-    //   values.password
-    //   // values.username
-    // );
-
-    // if (success) {
-    //   toast.success(
-    //     `${message as string} Please check your email for verification.`
-    //   );
-    //   router.push("/dashboard");
-    // } else {
-    //   toast.error(message as string);
-    // }
-
-    // await signUp.email({
-    //   email,
-    //   password,
-    //   name: `${firstName} ${lastName}`,
-    //   image: image ? await convertImageToBase64(image) : "",
-    //   callbackURL: "/dashboard",
-    //   fetchOptions: {
-    //     onResponse: () => {
-    //       setIsLoading(false);
-    //     },
-    //     onRequest: () => {
-    //       setIsLoading(true);
-    //     },
-    //     onError: (ctx) => {
-    //       toast.error(ctx.error.message);
-    //     },
-    //     onSuccess: async () => {
-    //       toast.success("Successfully signed up");
-    //       router.push(getCallbackURL(params));
-    //     },
-    //   },
-    // });
-
-    setIsLoading(false);
+    await signUp.email({
+      email,
+      password,
+      name: `${firstName} ${lastName}`,
+      image: profileImage ? await convertImageToBase64(profileImage) : "",
+      callbackURL: "/dashboard",
+      fetchOptions: {
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onError: (ctx) => {
+          console.log(ctx);
+          toast.error(ctx.error.message);
+        },
+        onSuccess: async () => {
+          toast.success("Successfully signed up");
+          router.push(getCallbackURL(params));
+        },
+      },
+    });
   }
 
   return (
@@ -269,12 +252,7 @@ export function SignUp() {
                   </div>
                 )}
               />
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-                onClick={async () => {}}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (

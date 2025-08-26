@@ -1,84 +1,101 @@
 import * as React from "react";
 import {
-  Html,
-  Head,
   Body,
+  Button,
   Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
   Section,
   Text,
-  Button,
-  Hr,
   Tailwind,
 } from "@react-email/components";
 
-interface VerifyEmailProps {
-  username: string;
-  verifyUrl: string;
-}
+const EmailVerification = (props: {
+  userEmail: string;
+  verificationUrl: string;
+}) => {
+  const { verificationUrl } = props;
 
-const VerifyEmail = (props: VerifyEmailProps) => {
-  const { username, verifyUrl } = props;
   return (
     <Html lang="en" dir="ltr">
+      <Head />
+      <Preview>Verify your email address to get started with Flow Mind</Preview>
       <Tailwind>
-        <Head />
         <Body className="bg-gray-100 font-sans py-[40px]">
-          <Container className="bg-white rounded-[8px] p-[32px] max-w-[600px] mx-auto">
-            <Section>
-              <Text className="text-[24px] font-bold text-gray-900 mb-[16px] mt-0">
-                Verify your email address
-              </Text>
-
-              <Text className="text-[16px] text-gray-700 mb-[24px] mt-0 leading-[24px]">
-                Thanks {username} for signing up! To complete your registration
-                and secure your account, please verify your email address by
-                clicking the button below.
-              </Text>
-
-              <Section className="text-center mb-[32px]">
-                <Button
-                  href={verifyUrl}
-                  className="bg-blue-600 text-white px-[32px] py-[12px] rounded-[6px] text-[16px] font-medium no-underline box-border"
-                >
-                  Verify Email Address
-                </Button>
-              </Section>
-
-              <Text className="text-[14px] text-gray-600 mb-[24px] mt-0 leading-[20px]">
-                If the button doesn&apos;t work, you can copy and paste this
-                link into your browser:
-                <br />
-                {verifyUrl}
-              </Text>
-
-              <Text className="text-[14px] text-gray-600 mb-[32px] mt-0 leading-[20px]">
-                This verification link will expire in 24 hours. If you
-                didn&apos;t create an account, you can safely ignore this email.
-              </Text>
-
-              <Hr className="border-gray-200 my-[24px]" />
-
-              <Text className="text-[12px] text-gray-500 m-0 leading-[16px]">
-                Best regards,
-                <br />
-                The Team
+          <Container className="bg-white rounded-[8px] shadow-sm max-w-[580px] mx-auto px-[40px] py-[40px]">
+            {/* Header */}
+            <Section className="text-center mb-[32px]">
+              <Heading className="text-[28px] font-bold text-gray-900 m-0 mb-[8px]">
+                Welcome to Flow Mind
+              </Heading>
+              <Text className="text-[16px] text-gray-600 m-0">
+                Let&apos;s verify your email to get you started
               </Text>
             </Section>
 
-            <Section className="mt-[32px] pt-[24px] border-t border-gray-200">
-              <Text className="text-[12px] text-gray-400 m-0 text-center leading-[16px]">
-                Company Name
-                <br />
-                123 Business Street, Suite 100
-                <br />
-                City, State 12345
+            {/* Main Content */}
+            <Section className="mb-[32px]">
+              <Text className="text-[16px] text-gray-700 leading-[24px] m-0 mb-[16px]">
+                Hi there,
               </Text>
+              <Text className="text-[16px] text-gray-700 leading-[24px] m-0 mb-[16px]">
+                Thank you for signing up for Flow Mind! We&apos;re excited to
+                have you on board.
+              </Text>
+              <Text className="text-[16px] text-gray-700 leading-[24px] m-0 mb-[24px]">
+                To complete your registration and start using Flow Mind, please
+                verify your email address by clicking the button below:
+              </Text>
+            </Section>
 
-              <Text className="text-[12px] text-gray-400 m-0 text-center mt-[8px] leading-[16px]">
-                <a href="#" className="text-gray-400 underline">
-                  Unsubscribe
-                </a>{" "}
-                | © 2024 Company Name. All rights reserved.
+            {/* Verification Button */}
+            <Section className="text-center mb-[32px]">
+              <Button
+                href={verificationUrl}
+                className="bg-blue-600 text-white px-[32px] py-[12px] rounded-[6px] text-[16px] font-medium no-underline box-border inline-block"
+              >
+                Verify Email Address
+              </Button>
+            </Section>
+
+            {/* Alternative Link */}
+            <Section className="mb-[32px]">
+              <Text className="text-[14px] text-gray-600 leading-[20px] m-0 mb-[16px]">
+                If the button doesn&apos;t work, you can also copy and paste
+                this link into your browser:
+              </Text>
+              <Text className="text-[14px] text-blue-600 leading-[20px] m-0 break-all">
+                {verificationUrl}
+              </Text>
+            </Section>
+
+            {/* Security Note */}
+            <Section className="mb-[32px] p-[16px] bg-gray-50 rounded-[6px]">
+              <Text className="text-[14px] text-gray-700 leading-[20px] m-0 mb-[8px] font-medium">
+                Security Note:
+              </Text>
+              <Text className="text-[14px] text-gray-600 leading-[20px] m-0">
+                This verification link will expire in 24 hours for your
+                security. If you didn&apos;t create an account with Flow Mind,
+                you can safely ignore this email.
+              </Text>
+            </Section>
+
+            {/* Footer */}
+            <Section className="border-t border-gray-200 pt-[24px]">
+              <Text className="text-[12px] text-gray-500 leading-[16px] m-0 mb-[8px]">
+                Flow Mind Team
+              </Text>
+              <Text className="text-[12px] text-gray-500 leading-[16px] m-0 mb-[8px]">
+                32 Thuy Loi Street, District 9
+              </Text>
+              <Text className="text-[12px] text-gray-500 leading-[16px] m-0 mb-[8px]">
+                Ho Chi Minh City, Vietnam
+              </Text>
+              <Text className="text-[12px] text-gray-500 leading-[16px] m-0">
+                © 2025 Flow Mind. All rights reserved.
               </Text>
             </Section>
           </Container>
@@ -88,4 +105,4 @@ const VerifyEmail = (props: VerifyEmailProps) => {
   );
 };
 
-export default VerifyEmail;
+export default EmailVerification;

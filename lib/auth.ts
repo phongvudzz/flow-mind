@@ -15,28 +15,20 @@ import { getActiveOrganization } from "@/server/organizations";
 import { Resend } from "resend";
 import OrganizationInvitationEmail from "@/components/emails/organization-invitation";
 import ForgotPasswordEmail from "@/components/emails/reset-password";
-// import VerifyEmail from "@/components/emails/verify-email";
+import VerifyEmail from "@/components/emails/verify-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY as string);
-const from = process.env.BETTER_AUTH_EMAIL || "phongvulearning@gmail.com";
-const to = process.env.TEST_EMAIL || "";
 
 export const auth = betterAuth({
   emailVerification: {
     async sendVerificationEmail({ user, url }) {
-      const res = await resend.emails.send({
-        from,
-        to: to || user.email,
-        subject: "Verify your email address",
-        html: `<a href="${url}">Verify your email address</a>`,
+      await resend.emails.send({
+        from: `Flowmind <onboarding@resend.dev>`,
+        to: user.email,
+        subject: "Verify your email",
+        react: VerifyEmail({ userEmail: user.email, verificationUrl: url }),
       });
-      console.log(res, user.email);
     },
-    async afterEmailVerification(user, request) {
-      // Your custom logic here, e.g., grant access to premium features
-      console.log(`${user.email} has been successfully verified!`);
-    },
-    autoSignInAfterVerification: true, // Automatically signIn the user after verification
     sendOnSignUp: true,
   },
   socialProviders: {
@@ -53,7 +45,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      resend.emails.send({
+      await resend.emails.send({
         from: `${process.env.EMAIL_SENDER_NAME} <${process.env.EMAIL_SENDER_ADDRESS}>`,
         to: user.email,
         subject: "Reset your password",
