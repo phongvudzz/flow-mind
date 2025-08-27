@@ -15,7 +15,7 @@ export const getCurrentUser = async () => {
   });
 
   if (!session) {
-    redirect("/login");
+    redirect("/sign-in");
   }
 
   const currentUser = await db.query.user.findFirst({
@@ -23,7 +23,7 @@ export const getCurrentUser = async () => {
   });
 
   if (!currentUser) {
-    redirect("/login");
+    redirect("/sign-in");
   }
 
   return {
@@ -32,12 +32,24 @@ export const getCurrentUser = async () => {
   };
 };
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async ({
+  email,
+  password,
+  rememberMe,
+  callbackURL,
+}: {
+  email: string;
+  password: string;
+  rememberMe: boolean | undefined;
+  callbackURL?: string;
+}) => {
   try {
     await auth.api.signInEmail({
       body: {
         email,
         password,
+        rememberMe,
+        callbackURL,
       },
     });
 

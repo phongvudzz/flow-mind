@@ -14,9 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -32,7 +31,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SocialProvider } from "@/types/social";
-import { Label } from "../ui/label";
+import { signIn, signInSocialSever } from "@/server/users";
+
 const signInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
@@ -40,7 +40,6 @@ const signInSchema = z.object({
 });
 
 export function SignIn() {
-  const [loading, startTransition] = useTransition();
   const router = useRouter();
   const params = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -59,17 +58,20 @@ export function SignIn() {
 
     const { email, password, rememberMe } = values;
 
-    startTransition(async () => {
-      await signIn.email(
-        { email, password, rememberMe },
-        {
-          onSuccess() {
-            toast.success("Successfully signed in");
-            router.push(getCallbackURL(params));
-          },
-        }
-      );
+    const { success, message } = await signIn({
+      email,
+      password,
+      rememberMe,
+      callbackURL: getCallbackURL(params),
     });
+
+    if (success) {
+      toast.success("Successfully signed in");
+      router.push(getCallbackURL(params));
+    } else {
+      toast.error(message as string);
+    }
+
     setIsLoading(false);
   }
 
@@ -78,7 +80,7 @@ export function SignIn() {
     callbackURL?: string
   ) {
     setIsLoading(true);
-    await signIn.social({ provider, callbackURL });
+    await signInSocialSever(provider, callbackURL);
     setIsLoading(false);
   }
 
@@ -149,8 +151,8 @@ export function SignIn() {
                 )}
               />
               <div className="grid gap-4">
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading || isLoading ? (
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
                     "Login"

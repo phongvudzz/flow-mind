@@ -83,11 +83,7 @@ export const organizationRelations = relations(organization, ({ many }) => ({
   members: many(member),
 }));
 
-export type Organization = typeof organization.$inferSelect;
-
 export const role = pgEnum("role", ["member", "admin", "owner"]);
-
-export type Role = (typeof role.enumValues)[number];
 
 export const member = pgTable("member", {
   id: text("id").primaryKey(),
@@ -111,12 +107,6 @@ export const memberRelations = relations(member, ({ one }) => ({
     references: [user.id],
   }),
 }));
-
-export type Member = typeof member.$inferSelect & {
-  user: typeof user.$inferSelect;
-};
-
-export type User = typeof user.$inferSelect;
 
 export const invitation = pgTable("invitation", {
   id: text("id").primaryKey(),

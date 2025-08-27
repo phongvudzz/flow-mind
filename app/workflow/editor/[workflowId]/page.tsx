@@ -1,6 +1,7 @@
 import { db } from "@/db/drizzle";
 import { getCurrentUser } from "@/server/users";
 import React from "react";
+import Editor from "../../_components/editor";
 
 async function EditorPage({ params }: { params: { workflowId: string } }) {
   const { currentUser } = await getCurrentUser();
@@ -14,7 +15,7 @@ async function EditorPage({ params }: { params: { workflowId: string } }) {
   //     return <div>Workflow not found</div>;
   //   }
 
-  return <div>Editor</div>;
+  return <Editor workflow={{} as any} />;
 }
 
 export default EditorPage;
